@@ -1,0 +1,21 @@
+# Package directories
+node_modules
+jspm_packages
+
+# Logs
+npm-debug.log
+
+# IDE Stuff
+**/.idea
+
+# OS Stuff
+.DS_Store
+.tmp
+.dump
+
+# Webpack directories
+.webpack
+
+# Environment
+.env
+docker.env

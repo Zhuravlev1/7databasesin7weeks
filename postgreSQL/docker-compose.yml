@@ -1,0 +1,26 @@
+version: '3.5'
+
+services:
+  postgres:
+    container_name: postgres_container
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: sevenDatabases
+      POSTGRES_PASSWORD: 7DatabasesFor7Weeks
+      PGDATA: /data/postgres
+    volumes:
+      - data:/data/postgres
+      - ./SQL/countries.sql:/docker-entrypoint-initdb.d/1-countries.sql
+      - ./SQL/cities.sql:/docker-entrypoint-initdb.d/2-cities.sql
+      - ./SQL/venues.sql:/docker-entrypoint-initdb.d/3-venues.sql
+      - ./SQL/events.sql:/docker-entrypoint-initdb.d/4-events.sql
+      - ./SQL/data.sql:/docker-entrypoint-initdb.d/5-data.sql
+      - ./SQL/create_movies.sql:/docker-entrypoint-initdb.d/6-create_movies.sql
+      - ./SQL/movies_data.sql:/docker-entrypoint-initdb.d/7-movies_data.sql
+    ports:
+      - 5432:5432
+
+volumes:
+  data:
