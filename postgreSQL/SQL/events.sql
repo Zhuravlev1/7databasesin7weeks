@@ -7,3 +7,4 @@
    FOREIGN KEY (venue_id) REFERENCES venues (venue_id)
  );
 
+CREATE INDEX events_starts ON events USING btree(starts);
