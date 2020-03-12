@@ -34,4 +34,6 @@ VALUES
  INSERT INTO events (title, starts, ends, venue_id)
  VALUES
    ('Devops', '2017-02-15 17:30:00', '2017-02-15 20:00:00', (SELECT venue_id FROM venues WHERE name = 'Best practice DynamoDB')),
-   ('Node.js meetup', '2017-02-21 17:30:00', '2017-02-21 20:00:00', );
+   ('Node.js meetup', '2017-02-21 17:30:00', '2017-02-21 20:00:00', 1);
+
+INSERT INTO events (title, starts) VALUES ('Valentine’s Day', '2020-02-14');

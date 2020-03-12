@@ -8,3 +8,4 @@
  );
 
 CREATE INDEX events_starts ON events USING btree(starts);
+ALTER TABLE events ADD colors text ARRAY;

@@ -19,6 +19,9 @@ services:
       - ./SQL/data.sql:/docker-entrypoint-initdb.d/5-data.sql
       - ./SQL/create_movies.sql:/docker-entrypoint-initdb.d/6-create_movies.sql
       - ./SQL/movies_data.sql:/docker-entrypoint-initdb.d/7-movies_data.sql
+      - ./SQL/logs.sql:/docker-entrypoint-initdb.d/8-logs.sql
+      - ./SQL/holidays_view.sql:/docker-entrypoint-initdb.d/9-holidays_view.sql
+      - ./SQL/tempory_month_count_table.sql:/docker-entrypoint-initdb.d/10-tempory_month_count_table.sql
     ports:
       - 5432:5432
 
