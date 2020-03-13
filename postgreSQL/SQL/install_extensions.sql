@@ -1,0 +1,5 @@
+CREATE EXTENSION fuzzystrmatch;
+CREATE EXTENSION tablefunc;
+CREATE EXTENSION cube;
+CREATE EXTENSION dict_xsyn;
+CREATE EXTENSION pg_trgm;

@@ -12,6 +12,7 @@ services:
       PGDATA: /data/postgres
     volumes:
       - data:/data/postgres
+      - ./SQL/install_extensions.sql:/docker-entrypoint-initdb.d/0-install_extensions.sql
       - ./SQL/countries.sql:/docker-entrypoint-initdb.d/1-countries.sql
       - ./SQL/cities.sql:/docker-entrypoint-initdb.d/2-cities.sql
       - ./SQL/venues.sql:/docker-entrypoint-initdb.d/3-venues.sql
