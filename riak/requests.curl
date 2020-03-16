@@ -1,0 +1,15 @@
+ curl -v -X PUT http://localhost:8098/riak/favs/db \
+ -H "Content-Type: text/html" \
+ -d "<html><body><h1>My new favorite DB is RIAK</h1></body></html>"
+
+ curl -v -X PUT http://localhost:8098/riak/animals/ace \
+ -H "Content-Type: application/json" \
+ -d '{"nickname" : "The Wonder Do", "breed" : "German Sheherd"}'
+
+ curl -X GET http://localhost {"buckets":["favs","animals"]}
+
+ curl -v -X PUT http://localhost:8098/riak/animals/polly?returnbody=true \
+ -H "Content-Type: application/json" \
+ -d '{"nickname" : "Sweet Polly Purebred", "breed" : "Purebred"}'
+
+
