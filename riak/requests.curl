@@ -6,10 +6,41 @@
  -H "Content-Type: application/json" \
  -d '{"nickname" : "The Wonder Do", "breed" : "German Sheherd"}'
 
- curl -X GET http://localhost {"buckets":["favs","animals"]}
+ curl -X GET http://localhost:8098 {"buckets":["favs","animals"]}
 
  curl -v -X PUT http://localhost:8098/riak/animals/polly?returnbody=true \
  -H "Content-Type: application/json" \
  -d '{"nickname" : "Sweet Polly Purebred", "breed" : "Purebred"}'
 
+  curl -i -X DELETE http://localhost:8098/riak/animals/ace
+  curl http://localhost:8098/riak/animals?keys=true
 
+ curl -X PUT http://localhost:8098/riak/cages/1 \
+ -H "Content-Type: application/json" \
+ -H "Link: </riak/animals/polly>; riaktag=\"contains\"" \
+ -d '{"room" : 101}'
+
+  curl -i GET http://localhost:8098/riak/animals/polly
+
+ curl -X PUT http://localhost:8098/riak/cages/2 \
+ -H "Content-Type: application/json" \
+ -H "Link: </riak/animals/ace>; riaktag=\"contains\",
+  </riak/cages/1>;riaktag=\"next_to\"" \
+ -d '{"room" : 101}'
+
+  curl -i GET http://localhost:8098/riak/cages/1/_,_,_
+  curl -i GET http://localhost:8098/riak/cages/2/animals,_,_
+  curl -i GET http://localhost:8098/riak/cages/2/_,next_to,0/animals,_,_
+
+ curl -X PUT http://localhost:8098/riak/cages/1 \
+ -H "Content-Type: application/json" \
+ -H "X-Riak-Meta-Color: Pink" \
+ -H "Link: </riak/animals/polly>; riaktag=\"contains\"" \
+ -d '{"room" : 101}'
+
+ curl -X PUT http://localhost:8098/riak/photos/polly.jpeg \
+ -H "Content-type: image/jpeg" \
+ -H "Link: </riak/animals/polly>; riaktag=\"photo\"" \
+ --data-binary @polly_image.jpeg
+
+ http://localhost:8098/riak/photos/polly.jpeg

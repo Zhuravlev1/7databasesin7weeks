@@ -1,0 +1,16 @@
+1)
+ curl -X PUT http://localhost:8098/riak/animals/polly \
+ -H "Content-Type: application/json" \
+ -H "Link: </riak/photos/polly.jpeg>; riaktag=\"contains\""
+
+2)
+ curl -X PUT http://localhost:8098/riak/files/pollyHomePage \
+  -H "Content-type: text/html" \
+  -H "Link: </riak/animals/polly>; riaktag=\"site\"" \
+  --data-binary @index.html
+
+3) curl -i -X PUT http://localhost:8098/riak/medicines/antibiotics \
+   -H "Content-Type: application/jpeg" \
+   -H "Link: </riak/animals/ace>;riaktag=\"sick\"" \
+    --data-binary @sick.jpg
+
