@@ -1,0 +1,10 @@
+1. create 'wiki', 'text'
+2. put 'wiki', 'Home', 'text:', 'Welcome to the wiki!'
+3. get 'wiki', 'Home', 'text:'
+4. disable 'wiki'
+5. alter 'wiki', { NAME => 'text', VERSIONS => org.apache.hadoop.hbase.HConstants::ALL_VERSIONS }
+6. alter 'wiki', { NAME => 'revision', VERSIONS => org.apache.hadoop.hbase.HConstants::ALL_VERSIONS }
+7. enable 'wiki'
+
+delete 'table_name', 'row_key', 'column_name'
+deleteall '<table_name>', '<row_key>'
