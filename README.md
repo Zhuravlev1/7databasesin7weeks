@@ -9,3 +9,4 @@
 8. Get list of volume  - ``docker volume ls``
 9. Remove volume  - ``docker volume rm VOLUME_NAME``
 10. Restart docker container  - ``docker restart CONTAINER_ID``
+11. Stop all containers - ``docker stop $(docker ps -a -q)``
