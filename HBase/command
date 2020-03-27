@@ -8,3 +8,6 @@
 
 delete 'table_name', 'row_key', 'column_name'
 deleteall '<table_name>', '<row_key>'
+
+8. alter 'wiki', {NAME=>'text', COMPRESSION=>'GZ', BLOOMFILTER=>'ROW'}
+9. docker exec -it hbase bash -c "curl https://dumps.wikimedia.org/enwiki/latest/enwiki-latest-pages-articles.xml.bz2 | bzcat | hbase shell /usr/local/code/import_from_wikipedia.rb"
