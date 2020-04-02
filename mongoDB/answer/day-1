@@ -1,0 +1,32 @@
+1) db.world.insert({"hello": "world"});
+   db.world.find({hello: "world"}, {_id: 0}).pretty();
+
+2) db.towns.find({ name: { $regex: /new/i} });
+3) db.towns.find({name: { $regex: /e/i}, famous_for: {$in: ["food", "beer"]}}, {_id: 0, name: 1, famous_for: 1});
+
+4) use blogger;
+ db.articles.insert({
+     name: "my first article",
+     authorEmail: "email@gmail.com",
+     createdAt: Date(),
+     text: "some text",
+   }
+ );
+
+5)
+db.articles.update(
+  {_id: ObjectId("5e847591ceb2cf155044cf22")},
+  {
+    $set: {
+      comments: [
+        {
+          authorName: "author name",
+          text: "first comment"
+        }
+      ]
+    }
+  }
+);
+
+6)
+docker exec -it mongodb_mongo_1 bash -c "mongo shell /usr/local/answer/day1.js"
