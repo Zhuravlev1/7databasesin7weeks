@@ -160,3 +160,71 @@ db.articles.update(
       ]
     }
   });
+
+populatePhones = function (area, start, stop) {
+  for (let i = start; i < stop; i++) {
+    const country = 1 + ((Math.random() * 8) << 0);
+    const num = (country * 1e10) + (area * 1e7) + i;
+    db.phones.insert({
+      _id: num,
+      components: {
+        country: country,
+        area: area,
+        prefix: (i * 1e-4) << 0,
+        number: i
+      },
+      display: "+" + country + " " + area + "-" + i
+    });
+  }
+};
+populatePhones(800, 5550000, 5650000);
+
+db.phones.find().limit(2);
+db.phones.getIndexes();
+
+db.phones.find({display: "+2 800-5550001"}).explain({verbose: "executionStats"});
+
+db.phones.ensureIndex({display: 1}, {unique: true, dropDups: true});
+db.setProfilingLevel(2);
+db.phones.find({display: "+2 800-5550001"});
+
+db.system.profile.find().pretty();
+db.phones.ensureIndex({"components.area": 1}, {background: 1});
+db.phones.getIndexes();
+
+db.phones.count({'components.number': {$gt: 5599999}});
+populatePhones(855, 5550000, 5650000);
+
+db.phones.distinct('components.number', {'components.number': {$lt: 5550005}});
+
+db.phones.aggregate([
+  {$match: {'components.number': {$gt: 5599999}}},
+  {$group: {_id: "$components.area", total: {$sum: 1}}}
+]);
+
+update_area = function () {
+  db.phones.find().forEach(
+    function (phone) {
+      phone.components.area++;
+      phone.display = "+" +
+        phone.components.country + " " +
+        phone.components.area + "-" +
+        phone.components.number;
+      db.phone.update({_id: phone._id}, phone, false);
+    }
+  )
+};
+
+// eval is deprecated. Use transactions for mongo 4.2 and more
+// https://docs.mongodb.com/manual/core/transactions/
+db.eval(update_area);
+db.runCommand({"count": "phones"});
+
+db.system.js.save({
+  _id: 'getLast',
+  value: function (collection) {
+    return collection.find({}).sort({'_id': 1}).limit(1)[0]
+  }
+});
+
+db.eval('getLast(db.phones)');
