@@ -32,16 +32,16 @@ db.towns.find({"_id": ObjectId("")}, {name: 1}).pretty();
 db.towns.find({"_id": ObjectId("")}, {name: 0}).pretty();
 
 db.towns.find(
-  {name: /^P/, population: {$lt: 10000}},
-  {name: 1, population: 1}
+    {name: /^P/, population: {$lt: 10000}},
+    {name: 1, population: 1}
 );
 
 const population_range = {};
 population_range['$lt'] = 1000000;
 population_range['$gt'] = 10000;
 db.towns.find(
-  {name: /^P/, population: population_range},
-  {name: 1}
+    {name: /^P/, population: population_range},
+    {name: 1}
 );
 
 db.towns.find({last_census: {$lte: ISODate('2008-31-01')}}, {_id: 0, name: 1});
@@ -88,35 +88,35 @@ db.countries.count();
 db.countries.find({'exports.foods.name': 'bacon', 'exports.foods.tasty': true}, {_id: 0, name: 1});
 
 db.countries.find(
-  {'exports.foods': {$elemMatch: {name: 'bacon', tasty: true}}},
-  {_id: 0, name: 1}
+    {'exports.foods': {$elemMatch: {name: 'bacon', tasty: true}}},
+    {_id: 0, name: 1}
 );
 
 db.countries.find(
-  {'exports.foods': {$elemMatch: {tasty: true, condiment: {$exists: true}}}},
-  {_id: 0, name: 1}
+    {'exports.foods': {$elemMatch: {tasty: true, condiment: {$exists: true}}}},
+    {_id: 0, name: 1}
 );
 
 db.countries.find(
-  {$or: [{_id: "mx"}, {name: "United States"}]},
-  {_id: 1}
+    {$or: [{_id: "mx"}, {name: "United States"}]},
+    {_id: 1}
 );
 
 db.towns.update(
-  {_id: ObjectId("")},
-  {$set: {"state": "OR"}}
+    {_id: ObjectId("")},
+    {$set: {"state": "OR"}}
 );
 
 db.towns.findOne({_id: ObjectId("")});
 
 db.towns.update(
-  {_id: ObjectId("")},
-  {$inc: {"population": 1000}}
+    {_id: ObjectId("")},
+    {$inc: {"population": 1000}}
 );
 
 db.towns.update(
-  {_id: ObjectId("")},
-  {$set: {country: {$ref: "countries", $id: "us"}}}
+    {_id: ObjectId("")},
+    {$set: {country: {$ref: "countries", $id: "us"}}}
 );
 
 const portland = db.towns.findOne({_id: ObjectId("")});
@@ -149,17 +149,17 @@ db.towns.find({
 });
 
 db.articles.update(
-  {_id: ObjectId("")},
-  {
-    $set: {
-      comments: [
-        {
-          authorName: "author name",
-          text: "first comment"
-        }
-      ]
-    }
-  });
+    {_id: ObjectId("")},
+    {
+      $set: {
+        comments: [
+          {
+            authorName: "author name",
+            text: "first comment"
+          }
+        ]
+      }
+    });
 
 populatePhones = function (area, start, stop) {
   for (let i = start; i < stop; i++) {
@@ -204,14 +204,14 @@ db.phones.aggregate([
 
 update_area = function () {
   db.phones.find().forEach(
-    function (phone) {
-      phone.components.area++;
-      phone.display = "+" +
-        phone.components.country + " " +
-        phone.components.area + "-" +
-        phone.components.number;
-      db.phone.update({_id: phone._id}, phone, false);
-    }
+      function (phone) {
+        phone.components.area++;
+        phone.display = "+" +
+            phone.components.country + " " +
+            phone.components.area + "-" +
+            phone.components.number;
+        db.phone.update({_id: phone._id}, phone, false);
+      }
   )
 };
 
@@ -228,3 +228,42 @@ db.system.js.save({
 });
 
 db.eval('getLast(db.phones)');
+
+distinctDigits = function (phone) {
+  const number = phone.components.number + '',
+      seen = [],
+      result = [];
+  let i = number.length;
+  while (i--) {
+    seen[+number[i]] = 1;
+  }
+  for (i = 0; i < 10; i++) {
+    if (seen[i]) {
+      result[result.length] = i;
+    }
+  }
+  return result;
+};
+db.system.js.save({_id: 'distinctDigits', value: distinctDigits});
+distinctDigits(db.phones.findOne({'components.number': 5551213}));
+
+map = function () {
+  const digits = distinctDigits(this);
+  emit({digits: digits, country: this.components.country}, {count: 1});
+};
+
+reduce = function (key, values) {
+  let total = 0;
+  for (let i = 0; i < values.length; i++) {
+    total += values[i].count;
+  }
+  return {count: total};
+};
+
+results = db.runCommand({
+  mapReduce: 'phones',
+  map: map,
+  reduce: reduce,
+  out: 'phones.report'
+});
+db.phones.report.find({'_id.country' : 8});
