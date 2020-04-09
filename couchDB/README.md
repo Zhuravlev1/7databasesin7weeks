@@ -1,0 +1,1 @@
+Docker image https://github.com/bitnami/bitnami-docker-couchdb
